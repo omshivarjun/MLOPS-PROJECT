@@ -8,6 +8,3 @@ joblib
 setuptools
 xgboost
 flask
-scipy
-fastapi
-streamlit
