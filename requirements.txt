@@ -1,10 +1,9 @@
 pandas
 numpy
+scikit-learn
+setuptools
 matplotlib
 seaborn
-tensorflow
-scikit-learn
 joblib
-setuptools
 xgboost
 flask
