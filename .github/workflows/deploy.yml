@@ -11,7 +11,7 @@ env:
     GKE_REGION: "us-central1"
     DEPLOYMENT_NAME: "mlops-app"
     REPOSITORY: "us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo"
-    IMAGE: "us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo/mlops-app:latest"
+    IMAGE: "us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo/mlops-app:latest-702cdbb206e2045fbd37714a07e348e3301a82c0"
 
 jobs:
     build-and-deploy:
