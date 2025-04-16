@@ -11,7 +11,8 @@ env:
     GKE_REGION: "us-central1"
     DEPLOYMENT_NAME: "mlops-app"
     REPOSITORY: "us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo"
-    IMAGE: "us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo/mlops-app:latest-702cdbb206e2045fbd37714a07e348e3301a82c0"
+    # Fix 1: Remove the tag from IMAGE, keep it as just the repository path
+    IMAGE: "us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo/mlops-app"
 
 jobs:
     build-and-deploy:
@@ -24,7 +25,7 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v2
 
-            - name: Authenticate with Google cloud
+            - name: Authenticate with Google Cloud
               uses: google-github-actions/auth@v1
               with:
                 credentials_json: ${{ secrets.GCP_SA_KEY }}
@@ -36,8 +37,12 @@ jobs:
             
             - name: Building and Pushing Image
               run: |
-                docker build -t $IMAGE:$GITHUB_SHA .
-                docker push $IMAGE:$GITHUB_SHA
+                # Fix 2: Use a shortened commit SHA (first 7 characters) for readability
+                COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+                # Build the image with the repository path and a tag
+                docker build -t $IMAGE:$COMMIT_SHA .
+                # Push the image with the same tag
+                docker push $IMAGE:$COMMIT_SHA
 
             - name: GKE Configuration
               run: |
@@ -45,10 +50,8 @@ jobs:
 
             - name: Deploying to Kubernetes
               run: |
+                # Fix 3: Use the same shortened commit SHA for consistency
+                COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
                 kubectl apply -f kubernetes-deployment.yaml
-                kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$IMAGE:$GITHUB_SHA
-            
-            
-
-
-
+                # Update the deployment to use the newly pushed image
+                kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=$IMAGE:$COMMIT_SHA

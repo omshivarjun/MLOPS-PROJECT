@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
       - name: mlops-app
+        # Note: Image tag is overridden by CI/CD pipeline with the latest commit SHA
         image: us-central1-docker.pkg.dev/weighty-planet-456817-t9/my-repo/mlops-app:latest-702cdbb206e2045fbd37714a07e348e3301a82c0
         ports:
         - containerPort: 5000
